@@ -1,4 +1,4 @@
-import type { Match, MatchStatus, Stage, Standing, Team } from "./types";
+import type { Match, MatchStatus, Stage, Standing, Team } from "../types";
 
 const worldCup26BaseUrl = "https://worldcup26.ir";
 

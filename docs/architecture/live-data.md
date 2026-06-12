@@ -49,7 +49,7 @@ Keep the generic `SPORTS_DATA_API_URL` integration as the paid-provider escape h
 The application should keep consuming `TournamentSnapshot`. Provider-specific code should live behind:
 
 - `src/lib/tournament/score-adapter.ts`
-- `src/lib/tournament/live-provider.ts`
+- `src/lib/tournament/providers/live-provider.ts`
 
 External provider responses should be normalized to:
 

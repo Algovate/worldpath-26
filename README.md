@@ -90,9 +90,10 @@ npm run check    # test + lint + build
 src/app/                    App Router pages and API routes
 src/components/             Shared shell and UI primitives
 src/features/               Page-level feature components
-src/lib/tournament/         Tournament types, adapters, normalization, prediction logic
-docs/provider-evaluation.md Live score provider evaluation
-docs/superpowers/           PRD and implementation plan
+src/lib/tournament/           Tournament types, adapters, prediction and standings logic
+src/lib/tournament/providers/ Live data provider normalization
+docs/product/prd.md           Product requirements
+docs/architecture/live-data.md Live data provider notes
 ```
 
 ## Provider Integration
@@ -101,15 +102,15 @@ docs/superpowers/           PRD and implementation plan
 
 1. 设置 `SCORE_PROVIDER=live`。
 2. 配置 `SPORTS_DATA_API_URL` 和 `SPORTS_DATA_API_KEY`。
-3. 在 `src/lib/tournament/live-provider.ts` 中对齐供应商原始字段。
+3. 在 `src/lib/tournament/providers/live-provider.ts` 中对齐供应商原始字段。
 4. 保持输出结构为 `Team`、`Match`、`Standing`。
 5. 通过 `/data` 和 `/api/status` 验证 provider、缓存和错误状态。
 
 核心边界：
 
 - `src/lib/tournament/score-adapter.ts`
-- `src/lib/tournament/worldcup26-provider.ts`
-- `src/lib/tournament/live-provider.ts`
+- `src/lib/tournament/providers/worldcup26-provider.ts`
+- `src/lib/tournament/providers/live-provider.ts`
 - `src/lib/tournament/snapshot.ts`
 
 ## Verification
@@ -135,6 +136,8 @@ npm run check
 
 ## References
 
-- [Provider evaluation](docs/provider-evaluation.md)
+- [Documentation index](docs/README.md)
+- [Product PRD](docs/product/prd.md)
+- [Live data provider notes](docs/architecture/live-data.md)
 - [WorldCup26 public API](https://worldcup26.ir/?lang=en)
 - [WorldCup26 API repository](https://github.com/rezarahiminia/worldcup2026)

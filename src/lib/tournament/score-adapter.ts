@@ -2,10 +2,10 @@ import { matches, teams } from "./mock-data";
 import {
   normalizeLiveProviderPayload,
   type LiveProviderRawPayload,
-} from "./live-provider";
+} from "./providers/live-provider";
 import { calculateGroupStandings } from "./standings";
 import type { Match, Standing, Team } from "./types";
-import { fetchWorldCup26TournamentData } from "./worldcup26-provider";
+import { fetchWorldCup26TournamentData } from "./providers/worldcup26-provider";
 
 export type ScoreProvider = "mock" | "live" | "worldcup26";
 

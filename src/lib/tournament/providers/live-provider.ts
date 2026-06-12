@@ -1,5 +1,5 @@
-import { calculateGroupStandings } from "./standings";
-import type { Match, MatchStatus, Standing, Team } from "./types";
+import { calculateGroupStandings } from "../standings";
+import type { Match, MatchStatus, Standing, Team } from "../types";
 
 export type LiveProviderRawTeam = {
   id: string;
