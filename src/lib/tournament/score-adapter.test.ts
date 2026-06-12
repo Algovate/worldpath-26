@@ -2,8 +2,18 @@ import { describe, expect, it, vi } from "vitest";
 import { getScoreAdapter, getScoreProviderStatus } from "./score-adapter";
 
 describe("score adapter provider selection", () => {
-  it("defaults to mock provider", () => {
+  it("defaults to worldcup26 provider", () => {
     vi.stubEnv("SCORE_PROVIDER", "");
+    vi.stubEnv("SPORTS_DATA_API_KEY", "");
+
+    expect(getScoreAdapter()).toMatchObject({
+      provider: "worldcup26",
+      isMock: false,
+    });
+  });
+
+  it("uses mock provider when explicitly configured", () => {
+    vi.stubEnv("SCORE_PROVIDER", "mock");
     vi.stubEnv("SPORTS_DATA_API_KEY", "");
 
     expect(getScoreAdapter()).toMatchObject({

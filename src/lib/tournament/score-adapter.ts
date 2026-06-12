@@ -5,8 +5,9 @@ import {
 } from "./live-provider";
 import { calculateGroupStandings } from "./standings";
 import type { Match, Standing, Team } from "./types";
+import { fetchWorldCup26TournamentData } from "./worldcup26-provider";
 
-export type ScoreProvider = "mock" | "live";
+export type ScoreProvider = "mock" | "live" | "worldcup26";
 
 export type ScoreAdapter = {
   provider: ScoreProvider;
@@ -38,6 +39,9 @@ export function getScoreAdapter(): ScoreAdapter {
   if (provider === "live") {
     return createLiveScoreAdapter();
   }
+  if (provider === "worldcup26") {
+    return createWorldCup26ScoreAdapter();
+  }
 
   return mockScoreAdapter;
 }
@@ -47,14 +51,18 @@ export function getScoreProviderStatus() {
   const hasApiKey = Boolean(process.env.SPORTS_DATA_API_KEY);
   const hasApiUrl = Boolean(process.env.SPORTS_DATA_API_URL);
   const isLiveReady = provider === "live" && hasApiKey && hasApiUrl;
+  const isWorldCup26Ready = provider === "worldcup26";
 
   return {
     provider,
-    mode: isLiveReady ? "live-ready" : "mock",
+    mode: isWorldCup26Ready ? "worldcup26" : isLiveReady ? "live-ready" : "mock",
     hasApiKey,
     hasApiUrl,
-    isMock: !isLiveReady,
+    isMock: !isLiveReady && !isWorldCup26Ready,
     notice:
+      provider === "worldcup26"
+        ? "当前使用 worldcup26.ir 公开 World Cup 2026 live data。"
+        : 
       provider === "live" && (!hasApiKey || !hasApiUrl)
         ? "SCORE_PROVIDER=live 已设置，但 SPORTS_DATA_API_KEY 或 SPORTS_DATA_API_URL 缺失，当前回退到 mock 数据。"
         : isLiveReady
@@ -64,6 +72,8 @@ export function getScoreProviderStatus() {
 }
 
 function normalizeProvider(value: string | undefined): ScoreProvider {
+  if (!value) return "worldcup26";
+  if (value === "worldcup26") return "worldcup26";
   return value === "live" ? "live" : "mock";
 }
 
@@ -96,6 +106,30 @@ function createLiveScoreAdapter(): ScoreAdapter {
   function getLiveData() {
     liveDataPromise ??= fetchLiveProviderData();
     return liveDataPromise;
+  }
+}
+
+function createWorldCup26ScoreAdapter(): ScoreAdapter {
+  let dataPromise: ReturnType<typeof fetchWorldCup26TournamentData> | undefined;
+
+  return {
+    provider: "worldcup26",
+    isMock: false,
+    notice: "当前使用 worldcup26.ir 公开 World Cup 2026 live data。",
+    async getTeams() {
+      return (await getData()).teams;
+    },
+    async getMatches() {
+      return (await getData()).matches;
+    },
+    async getStandings() {
+      return (await getData()).standings;
+    },
+  };
+
+  function getData() {
+    dataPromise ??= fetchWorldCup26TournamentData();
+    return dataPromise;
   }
 }
 

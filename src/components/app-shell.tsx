@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <div className="data-pill">模拟数据</div>
+        <div className="data-pill">Live 数据</div>
       </header>
       <main className="main-content">{children}</main>
     </div>

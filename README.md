@@ -2,7 +2,7 @@
 
 一个用于查看 2026 世界杯赛程、比分、积分榜，并完成冠军路径预测的 Next.js 原型应用。
 
-当前版本使用本地 mock 数据，不代表官方赛程或实时比分。代码已经预留 `ScoreAdapter` 和 API route 边界，后续可以替换为真实赛事数据供应商。
+当前版本默认使用 `worldcup26.ir` 公开 World Cup 2026 live data，并保留本地 mock 回退和通用 live provider 接口。
 
 ## 功能
 
@@ -15,7 +15,7 @@
 
 ## 数据接口
 
-当前 API 返回 mock 数据：
+当前 API 默认返回 `worldcup26.ir` live data：
 
 - `GET /api/tournament`
 - `GET /api/matches`
@@ -24,7 +24,7 @@
 
 后续接真实比分时，应实现新的 live score adapter，并保持页面消费的快照结构不变。
 
-`SCORE_PROVIDER=live` 现在只启用 live adapter 骨架。如果缺少 `SPORTS_DATA_API_KEY`，接口会明确报告回退到 mock 数据，不会假装是实时比分。
+`SCORE_PROVIDER=worldcup26` 使用无需 API key 的公开 World Cup 2026 API。`SCORE_PROVIDER=live` 使用自定义供应商 URL；如果缺少 `SPORTS_DATA_API_KEY` 或 `SPORTS_DATA_API_URL`，接口会明确报告回退到 mock 数据，不会假装是实时比分。
 
 `/data` 页面用于查看当前 provider、缓存、最后同步时间和 API 入口。
 

@@ -83,7 +83,16 @@ export function PredictionWorkspace({
           knockoutWinners?: Record<string, string>;
           updatedAt?: string;
         };
-        if (saved.groupRankings) setGroupRankings(saved.groupRankings);
+        const savedGroupRankings = saved.groupRankings;
+        if (
+          !savedGroupRankings ||
+          !isStoredPredictionCompatible(savedGroupRankings, teamsById)
+        ) {
+          window.localStorage.removeItem(storageKey);
+          setHasLoadedStoredPrediction(true);
+          return;
+        }
+        setGroupRankings(savedGroupRankings);
         if (saved.knockoutWinners) setKnockoutWinners(saved.knockoutWinners);
         setSavedAt(saved.updatedAt);
       } catch {
@@ -94,7 +103,7 @@ export function PredictionWorkspace({
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [teamsById]);
 
   useEffect(() => {
     if (!hasLoadedStoredPrediction) return;
@@ -187,6 +196,16 @@ export function PredictionWorkspace({
       />
     </div>
   );
+}
+
+function isStoredPredictionCompatible(
+  groupRankings: Record<string, string[]> | undefined,
+  teamsById: Map<string, Team>,
+) {
+  if (!groupRankings) return false;
+  const rankedIds = Object.values(groupRankings).flat();
+  if (rankedIds.length !== teamsById.size) return false;
+  return rankedIds.every((teamId) => teamsById.has(teamId));
 }
 
 function pickStrongerTeam(
