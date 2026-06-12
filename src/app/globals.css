@@ -551,7 +551,9 @@ th {
 }
 
 .status-list div,
-.api-link-row {
+.api-link-row,
+.comparison-header,
+.comparison-row {
   display: flex;
   align-items: center;
 }
@@ -563,6 +565,41 @@ th {
 .api-link-row {
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.comparison-header,
+.comparison-row {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.comparison-header strong {
+  font-size: 28px;
+  color: var(--accent);
+}
+
+.comparison-list {
+  display: grid;
+  gap: 8px;
+}
+
+.comparison-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.comparison-row small {
+  margin-left: auto;
+}
+
+.hit {
+  color: var(--accent);
+}
+
+.miss {
+  color: var(--warn);
 }
 
 @media (max-width: 900px) {

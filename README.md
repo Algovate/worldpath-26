@@ -53,9 +53,9 @@ cp .env.example .env.local
 
 推荐步骤：
 
-1. 在 `.env.local` 设置 `SCORE_PROVIDER=live` 和 `SPORTS_DATA_API_KEY`。
+1. 在 `.env.local` 设置 `SCORE_PROVIDER=live`、`SPORTS_DATA_API_URL` 和 `SPORTS_DATA_API_KEY`。
 2. 在 `src/lib/tournament/live-provider.ts` 中补充供应商原始字段类型。
-3. 实现供应商请求函数，读取服务端环境变量，不要在客户端组件中请求供应商 API。
+3. 确认供应商响应符合 `LiveProviderRawPayload`，或调整 raw 类型。
 4. 将供应商响应传入 `normalizeLiveProviderPayload`。
 5. 保持 `TournamentSnapshot` 结构不变，让页面继续消费统一数据。
 6. 打开 `/data` 和 `/api/status` 检查 provider、缓存、最后同步时间和错误状态。

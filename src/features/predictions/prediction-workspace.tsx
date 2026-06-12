@@ -7,9 +7,10 @@ import {
   buildRoundOf32Seeds,
   getPredictionCompletion,
 } from "@/lib/tournament/predictions";
-import type { Team } from "@/lib/tournament/types";
+import type { Match, Team } from "@/lib/tournament/types";
 import { GroupRankingPicker } from "./group-ranking-picker";
 import { KnockoutBracket } from "./knockout-bracket";
+import { PredictionComparison } from "./prediction-comparison";
 import { PredictionSummary } from "./prediction-summary";
 
 const roundLabels = ["32 强", "16 强", "8 强", "半决赛", "决赛"];
@@ -22,7 +23,13 @@ type BracketRound = {
   matches: Array<[string | undefined, string | undefined]>;
 };
 
-export function PredictionWorkspace({ teams }: { teams: Team[] }) {
+export function PredictionWorkspace({
+  teams,
+  matches,
+}: {
+  teams: Team[];
+  matches: Match[];
+}) {
   const teamsById = useMemo(() => new Map(teams.map((team) => [team.id, team])), [teams]);
   const initialGroupRankings = useMemo(() => buildInitialGroupRankings(teams), [teams]);
   const [groupRankings, setGroupRankings] = useState(initialGroupRankings);
@@ -165,6 +172,11 @@ export function PredictionWorkspace({ teams }: { teams: Team[] }) {
           </button>
         </div>
         <GroupRankingPicker groupRankings={groupRankings} teamsById={teamsById} onMove={moveTeam} />
+        <PredictionComparison
+          groupRankings={groupRankings}
+          matches={matches}
+          teamsById={teamsById}
+        />
         <KnockoutBracket rounds={rounds} teamsById={teamsById} winners={knockoutWinners} onPick={pickWinner} />
       </div>
       <PredictionSummary
