@@ -4,9 +4,22 @@ Date: 2026-06-12
 
 ## Recommendation
 
-Use the current generic `SPORTS_DATA_API_URL` integration until a paid provider is selected. For a production World Cup-focused app, evaluate Sportmonks and API-FOOTBALL first because both publish World Cup-oriented material and have football-specific live score/standings coverage.
+Use `worldcup26.ir` as the default live data provider for the current prototype. It exposes 2026 World Cup teams, games, groups, standings, and live scores without an API key, which makes it the fastest path for a public demo.
+
+Keep the generic `SPORTS_DATA_API_URL` integration as the paid-provider escape hatch. For a production commercial launch, evaluate Sportmonks and API-FOOTBALL first because both publish World Cup-oriented material and have football-specific live score/standings coverage.
 
 ## Candidates
+
+### worldcup26.ir
+
+- Current default provider in the app via `SCORE_PROVIDER=worldcup26`.
+- Public API endpoints used by the app:
+  - `https://worldcup26.ir/get/teams`
+  - `https://worldcup26.ir/get/games`
+  - `https://worldcup26.ir/get/groups`
+- No API key is required for read access.
+- Good fit for the current demo because it already returns 48 teams, 104 matches, groups, standings, and score fields.
+- Main risk: it is not a contracted commercial data provider, so uptime, latency, schema stability, and display rights still need validation before a production launch.
 
 ### Sportmonks
 
@@ -54,3 +67,7 @@ The browser must never call the provider directly. All provider requests should 
 - Confirm whether standings, squads, event timelines, and knockout brackets are available in the selected plan.
 - Confirm commercial terms for public display.
 
+## Sources
+
+- `worldcup26.ir`: https://worldcup26.ir/?lang=en
+- `worldcup26` API repository: https://github.com/rezarahiminia/worldcup2026

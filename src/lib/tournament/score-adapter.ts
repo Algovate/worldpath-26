@@ -62,11 +62,10 @@ export function getScoreProviderStatus() {
     notice:
       provider === "worldcup26"
         ? "当前使用 worldcup26.ir 公开 World Cup 2026 live data。"
-        : 
-      provider === "live" && (!hasApiKey || !hasApiUrl)
-        ? "SCORE_PROVIDER=live 已设置，但 SPORTS_DATA_API_KEY 或 SPORTS_DATA_API_URL 缺失，当前回退到 mock 数据。"
-        : isLiveReady
-          ? "实时比分供应商配置已就绪，服务端将从 SPORTS_DATA_API_URL 拉取数据。"
+        : provider === "live" && (!hasApiKey || !hasApiUrl)
+          ? "SCORE_PROVIDER=live 已设置，但 SPORTS_DATA_API_KEY 或 SPORTS_DATA_API_URL 缺失，当前回退到 mock 数据。"
+          : isLiveReady
+            ? "实时比分供应商配置已就绪，服务端将从 SPORTS_DATA_API_URL 拉取数据。"
           : mockScoreAdapter.notice,
   };
 }
