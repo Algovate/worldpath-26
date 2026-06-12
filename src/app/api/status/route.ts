@@ -7,12 +7,16 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  return Response.json(await getStatusPayload());
+}
+
+export async function getStatusPayload() {
   await getTournamentSnapshot();
 
-  return Response.json({
+  return {
     ok: true,
     checkedAt: new Date().toISOString(),
     scoreProvider: getScoreProviderStatus(),
     dataSource: getTournamentDataSourceStatus(),
-  });
+  };
 }

@@ -49,6 +49,19 @@ cp .env.example .env.local
 
 不要提交 `.env.local`。Next.js 会加载 `.env*` 文件；只有 `NEXT_PUBLIC_` 前缀的变量会进入浏览器端 bundle。
 
+## 接入真实比分 API
+
+推荐步骤：
+
+1. 在 `.env.local` 设置 `SCORE_PROVIDER=live` 和 `SPORTS_DATA_API_KEY`。
+2. 在 `src/lib/tournament/live-provider.ts` 中补充供应商原始字段类型。
+3. 实现供应商请求函数，读取服务端环境变量，不要在客户端组件中请求供应商 API。
+4. 将供应商响应传入 `normalizeLiveProviderPayload`。
+5. 保持 `TournamentSnapshot` 结构不变，让页面继续消费统一数据。
+6. 打开 `/data` 和 `/api/status` 检查 provider、缓存、最后同步时间和错误状态。
+
+当前 live adapter 仍使用 mock 数据骨架，目的是先固定接口契约和错误边界。
+
 ## 验证
 
 ```bash

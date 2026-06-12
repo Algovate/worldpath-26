@@ -1,7 +1,7 @@
 import { getScoreAdapter } from "./score-adapter";
 import type { Match, Standing, Team } from "./types";
 
-const snapshotCacheTtlMs = 15_000;
+export const snapshotCacheTtlMs = 15_000;
 
 export type TournamentSnapshot = {
   teams: Team[];
@@ -67,6 +67,16 @@ export function getTournamentDataSourceStatus() {
     cacheTtlSeconds: snapshotCacheTtlMs / 1000,
     hasCachedSnapshot: Boolean(cachedSnapshot),
   };
+}
+
+export function resetTournamentSnapshotCacheForTest() {
+  if (process.env.NODE_ENV !== "test") {
+    throw new Error("resetTournamentSnapshotCacheForTest can only run in tests");
+  }
+
+  cachedSnapshot = undefined;
+  lastSuccessfulSyncAt = undefined;
+  lastError = undefined;
 }
 
 async function createTournamentSnapshot(): Promise<TournamentSnapshot> {
