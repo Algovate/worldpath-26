@@ -26,6 +26,8 @@
 
 `SCORE_PROVIDER=live` 现在只启用 live adapter 骨架。如果缺少 `SPORTS_DATA_API_KEY`，接口会明确报告回退到 mock 数据，不会假装是实时比分。
 
+`/data` 页面用于查看当前 provider、缓存、最后同步时间和 API 入口。
+
 ## Getting Started
 
 安装依赖并启动开发服务器：

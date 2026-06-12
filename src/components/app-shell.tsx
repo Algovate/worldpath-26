@@ -6,6 +6,7 @@ const navItems = [
   { href: "/matches", label: "赛程" },
   { href: "/standings", label: "积分" },
   { href: "/predictions", label: "预测" },
+  { href: "/data", label: "数据" },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {

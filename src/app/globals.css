@@ -185,7 +185,8 @@ small {
 .stats-grid,
 .standings-grid,
 .match-grid,
-.group-picker-grid {
+.group-picker-grid,
+.data-grid {
   display: grid;
   gap: 16px;
 }
@@ -196,6 +197,10 @@ small {
 
 .stats-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.data-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .stat-card,
@@ -533,15 +538,38 @@ th {
   margin-top: 18px;
 }
 
-.summary-card dl div {
+.summary-card dl div,
+.status-list div {
   justify-content: space-between;
   gap: 12px;
+}
+
+.status-list {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.status-list div,
+.api-link-row {
+  display: flex;
+  align-items: center;
+}
+
+.status-list dt {
+  color: var(--muted);
+}
+
+.api-link-row {
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 @media (max-width: 900px) {
   .topbar,
   .dashboard-grid,
-  .prediction-layout {
+  .prediction-layout,
+  .data-grid {
     grid-template-columns: 1fr;
   }
 
