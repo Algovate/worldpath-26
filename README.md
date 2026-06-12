@@ -1,8 +1,8 @@
-# 2026 世界杯追踪器
+# WorldPath 26
 
 一个用于查看 2026 世界杯赛程、比分、积分榜，并完成冠军路径预测的 Next.js 原型应用。
 
-当前版本默认使用 `worldcup26.ir` 公开 World Cup 2026 live data，并保留本地 mock 回退和通用 live provider 接口。
+WorldPath 26 当前默认使用 `worldcup26.ir` 公开 World Cup 2026 live data，并保留本地 mock 回退和通用 live provider 接口。
 
 ## 功能
 

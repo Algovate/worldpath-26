@@ -16,8 +16,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Link href="/" className="brand" aria-label="回到总览">
           <span className="brand-mark">26</span>
           <span>
-            <strong>世界杯追踪器</strong>
-            <small>成绩查看与预测</small>
+            <strong>WorldPath 26</strong>
+            <small>世界杯成绩与冠军预测</small>
           </span>
         </Link>
         <nav className="primary-nav" aria-label="主导航">

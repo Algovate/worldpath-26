@@ -68,8 +68,8 @@ export function OverviewDashboard({
   return (
     <div className="stack">
       <SectionHeader
-        eyebrow="World Cup 2026"
-        title="成绩、积分和冠军预测工作台"
+        eyebrow="WorldPath 26"
+        title="世界杯成绩与冠军预测"
         description={snapshot.notice}
         action={
           <Link className="data-pill" href="/predictions">

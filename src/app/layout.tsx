@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "2026 世界杯追踪器",
-  description: "查看 2026 世界杯成绩、积分并预测冠军。",
+  title: "WorldPath 26 | 世界杯成绩与冠军预测",
+  description: "查看 2026 世界杯成绩、积分，并预测冠军路径。",
 };
 
 export default function RootLayout({
