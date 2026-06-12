@@ -116,6 +116,27 @@ export function PredictionWorkspace({ teams }: { teams: Team[] }) {
     setSavedAt(new Date().toISOString());
   }
 
+  function autoPickFavorites() {
+    const nextWinners: Record<string, string> = {};
+    let pairings = buildRoundOf32Seeds(groupRankings);
+
+    for (const roundId of roundIds) {
+      const roundWinners = pairings.map(([homeId, awayId], index) => {
+        const winnerId = pickStrongerTeam(homeId, awayId, teamsById);
+        nextWinners[`${roundId}-${index}`] = winnerId;
+        return winnerId;
+      });
+
+      pairings = [];
+      for (let index = 0; index < roundWinners.length; index += 2) {
+        pairings.push([roundWinners[index], roundWinners[index + 1]]);
+      }
+    }
+
+    setKnockoutWinners(nextWinners);
+    setSavedAt(new Date().toISOString());
+  }
+
   function resetPrediction() {
     setGroupRankings(initialGroupRankings);
     setKnockoutWinners({});
@@ -139,6 +160,9 @@ export function PredictionWorkspace({ teams }: { teams: Team[] }) {
           <button className="secondary-button" type="button" onClick={resetPrediction}>
             重置预测
           </button>
+          <button className="secondary-button" type="button" onClick={autoPickFavorites}>
+            热门路径
+          </button>
         </div>
         <GroupRankingPicker groupRankings={groupRankings} teamsById={teamsById} onMove={moveTeam} />
         <KnockoutBracket rounds={rounds} teamsById={teamsById} winners={knockoutWinners} onPick={pickWinner} />
@@ -151,4 +175,19 @@ export function PredictionWorkspace({ teams }: { teams: Team[] }) {
       />
     </div>
   );
+}
+
+function pickStrongerTeam(
+  homeId: string | undefined,
+  awayId: string | undefined,
+  teamsById: Map<string, Team>,
+) {
+  if (!homeId && !awayId) return "";
+  if (!homeId) return awayId ?? "";
+  if (!awayId) return homeId;
+
+  const homeRank = teamsById.get(homeId)?.fifaRank ?? 999;
+  const awayRank = teamsById.get(awayId)?.fifaRank ?? 999;
+
+  return homeRank <= awayRank ? homeId : awayId;
 }
