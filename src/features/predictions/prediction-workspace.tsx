@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   advanceKnockoutWinner,
   buildInitialGroupRankings,
@@ -14,6 +14,7 @@ import { PredictionSummary } from "./prediction-summary";
 
 const roundLabels = ["32 强", "16 强", "8 强", "半决赛", "决赛"];
 const roundIds = ["r32", "r16", "qf", "sf", "final"];
+const storageKey = "worldcup-2026-prediction";
 
 type BracketRound = {
   id: string;
@@ -23,8 +24,11 @@ type BracketRound = {
 
 export function PredictionWorkspace({ teams }: { teams: Team[] }) {
   const teamsById = useMemo(() => new Map(teams.map((team) => [team.id, team])), [teams]);
-  const [groupRankings, setGroupRankings] = useState(() => buildInitialGroupRankings(teams));
+  const initialGroupRankings = useMemo(() => buildInitialGroupRankings(teams), [teams]);
+  const [groupRankings, setGroupRankings] = useState(initialGroupRankings);
   const [knockoutWinners, setKnockoutWinners] = useState<Record<string, string>>({});
+  const [hasLoadedStoredPrediction, setHasLoadedStoredPrediction] = useState(false);
+  const [savedAt, setSavedAt] = useState<string>();
 
   const rounds = useMemo(() => {
     const firstRound = buildRoundOf32Seeds(groupRankings);
@@ -59,6 +63,41 @@ export function PredictionWorkspace({ teams }: { teams: Team[] }) {
     updatedAt: new Date().toISOString(),
   });
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const raw = window.localStorage.getItem(storageKey);
+        if (!raw) {
+          setHasLoadedStoredPrediction(true);
+          return;
+        }
+        const saved = JSON.parse(raw) as {
+          groupRankings?: Record<string, string[]>;
+          knockoutWinners?: Record<string, string>;
+          updatedAt?: string;
+        };
+        if (saved.groupRankings) setGroupRankings(saved.groupRankings);
+        if (saved.knockoutWinners) setKnockoutWinners(saved.knockoutWinners);
+        setSavedAt(saved.updatedAt);
+      } catch {
+        window.localStorage.removeItem(storageKey);
+      } finally {
+        setHasLoadedStoredPrediction(true);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedStoredPrediction) return;
+    const updatedAt = new Date().toISOString();
+    window.localStorage.setItem(
+      storageKey,
+      JSON.stringify({ groupRankings, knockoutWinners, championId, updatedAt }),
+    );
+  }, [championId, groupRankings, hasLoadedStoredPrediction, knockoutWinners]);
+
   function moveTeam(group: string, teamId: string, direction: -1 | 1) {
     setGroupRankings((current) => {
       const nextGroup = [...current[group]];
@@ -67,17 +106,40 @@ export function PredictionWorkspace({ teams }: { teams: Team[] }) {
       if (target < 0 || target >= nextGroup.length) return current;
       [nextGroup[index], nextGroup[target]] = [nextGroup[target], nextGroup[index]];
       setKnockoutWinners({});
+      setSavedAt(new Date().toISOString());
       return { ...current, [group]: nextGroup };
     });
   }
 
   function pickWinner(matchId: string, winnerId: string) {
     setKnockoutWinners((current) => advanceKnockoutWinner(matchId, winnerId, current));
+    setSavedAt(new Date().toISOString());
+  }
+
+  function resetPrediction() {
+    setGroupRankings(initialGroupRankings);
+    setKnockoutWinners({});
+    window.localStorage.removeItem(storageKey);
+    setSavedAt(new Date().toISOString());
   }
 
   return (
     <div className="prediction-layout">
       <div className="stack">
+        <div className="refresh-row">
+          <span>
+            {savedAt
+              ? `预测已保存：${new Intl.DateTimeFormat("zh-CN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                }).format(new Date(savedAt))}`
+              : "预测会自动保存在当前浏览器。"}
+          </span>
+          <button className="secondary-button" type="button" onClick={resetPrediction}>
+            重置预测
+          </button>
+        </div>
         <GroupRankingPicker groupRankings={groupRankings} teamsById={teamsById} onMove={moveTeam} />
         <KnockoutBracket rounds={rounds} teamsById={teamsById} winners={knockoutWinners} onPick={pickWinner} />
       </div>

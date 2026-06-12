@@ -36,6 +36,14 @@ select {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .app-shell {
   min-height: 100vh;
   background:
@@ -129,6 +137,23 @@ small {
   font-size: 13px;
 }
 
+.secondary-button {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--foreground);
+  padding: 9px 12px;
+  white-space: nowrap;
+}
+
+.secondary-button:hover:not(:disabled) {
+  border-color: rgba(50, 213, 131, 0.55);
+}
+
+.secondary-button:disabled {
+  opacity: 0.55;
+}
+
 .main-content {
   width: min(1440px, 100%);
   margin: 0 auto;
@@ -201,6 +226,34 @@ small {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.refresh-row,
+.warning-banner {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.refresh-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.refresh-row.inline {
+  margin-left: auto;
+}
+
+.warning-banner {
+  border-color: rgba(253, 176, 34, 0.45);
+  background: rgba(253, 176, 34, 0.1);
+  color: var(--warn);
+  padding: 12px 14px;
 }
 
 .match-grid {
@@ -505,6 +558,12 @@ th {
     position: static;
   }
 
+  .refresh-row,
+  .refresh-row.inline {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .bracket {
     grid-template-columns: 1fr;
     overflow-x: visible;
@@ -532,6 +591,11 @@ th {
 
   .match-line {
     align-items: stretch;
+  }
+
+  .refresh-row {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .team-inline {

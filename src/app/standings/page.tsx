@@ -1,13 +1,9 @@
 import { SectionHeader } from "@/components/section-header";
-import { StandingsTable } from "@/features/standings/standings-table";
-import { mockScoreAdapter } from "@/lib/tournament/score-adapter";
+import { StandingsBoard } from "@/features/standings/standings-board";
+import { getTournamentSnapshot } from "@/lib/tournament/snapshot";
 
 export default async function StandingsPage() {
-  const [teams, standings] = await Promise.all([
-    mockScoreAdapter.getTeams(),
-    mockScoreAdapter.getStandings(),
-  ]);
-  const teamsById = new Map(teams.map((team) => [team.id, team]));
+  const snapshot = await getTournamentSnapshot();
 
   return (
     <div>
@@ -16,11 +12,15 @@ export default async function StandingsPage() {
         title="小组积分榜"
         description="前两名直通 32 强，第三名进入最佳第三排名池。"
       />
-      <div className="standings-grid">
-        {Object.entries(standings).map(([group, table]) => (
-          <StandingsTable key={group} group={group} standings={table} teamsById={teamsById} />
-        ))}
-      </div>
+      <StandingsBoard
+        initialData={{
+          teams: snapshot.teams,
+          standings: snapshot.standings,
+          lastUpdatedAt: snapshot.lastUpdatedAt,
+          isMock: snapshot.isMock,
+          notice: snapshot.notice,
+        }}
+      />
     </div>
   );
 }
