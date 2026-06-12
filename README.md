@@ -20,8 +20,11 @@
 - `GET /api/tournament`
 - `GET /api/matches`
 - `GET /api/standings`
+- `GET /api/status`
 
 后续接真实比分时，应实现新的 live score adapter，并保持页面消费的快照结构不变。
+
+`SCORE_PROVIDER=live` 现在只启用 live adapter 骨架。如果缺少 `SPORTS_DATA_API_KEY`，接口会明确报告回退到 mock 数据，不会假装是实时比分。
 
 ## Getting Started
 

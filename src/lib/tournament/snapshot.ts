@@ -1,4 +1,4 @@
-import { mockScoreAdapter } from "./score-adapter";
+import { getScoreAdapter } from "./score-adapter";
 import type { Match, Standing, Team } from "./types";
 
 export type TournamentSnapshot = {
@@ -7,14 +7,16 @@ export type TournamentSnapshot = {
   standings: Record<string, Standing[]>;
   lastUpdatedAt: string;
   isMock: boolean;
+  provider: string;
   notice: string;
 };
 
 export async function getTournamentSnapshot(): Promise<TournamentSnapshot> {
+  const adapter = getScoreAdapter();
   const [teams, matches, standings] = await Promise.all([
-    mockScoreAdapter.getTeams(),
-    mockScoreAdapter.getMatches(),
-    mockScoreAdapter.getStandings(),
+    adapter.getTeams(),
+    adapter.getMatches(),
+    adapter.getStandings(),
   ]);
 
   return {
@@ -22,7 +24,8 @@ export async function getTournamentSnapshot(): Promise<TournamentSnapshot> {
     matches,
     standings,
     lastUpdatedAt: new Date().toISOString(),
-    isMock: true,
-    notice: "当前为产品原型数据，不代表官方赛程或实时比分。",
+    isMock: adapter.isMock,
+    provider: adapter.provider,
+    notice: adapter.notice,
   };
 }
